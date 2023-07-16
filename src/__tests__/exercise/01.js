@@ -22,6 +22,7 @@ test('counter increments and decrements when the buttons are clicked', () => {
   // 🐨 get a reference to the message div:
   //   💰 div.firstChild.querySelector('div')
   //
+  //
   // 🐨 expect the message.textContent toBe 'Current count: 0'
   // 🐨 click the increment button (💰 act(() => increment.click()))
   // 🐨 assert the message.textContent
