@@ -11,11 +11,9 @@ test('submitting the form calls onSubmit with username and password', async () =
   const handleSubmit = jest.fn()
   render(<Login onSubmit={handleSubmit} />)
 
-  const buildLoginForm = () => ({
-    username: faker.internet.userName(),
-    password: faker.internet.password(),
-  })
-  const {username, password} = buildLoginForm()
+  const {username, password} = buildLoginForm({password: 'abc'})
+
+  console.log({username, password})
 
   await userEvent.type(screen.getByLabelText(/Username/i), username)
   await userEvent.type(screen.getByLabelText(/Password/i), password)
@@ -27,3 +25,11 @@ test('submitting the form calls onSubmit with username and password', async () =
   })
   expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
+
+function buildLoginForm(props) {
+  return {
+    username: faker.internet.userName(),
+    password: faker.internet.password(),
+    ...props,
+  }
+}
