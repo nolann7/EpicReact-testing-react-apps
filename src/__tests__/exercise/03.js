@@ -8,7 +8,10 @@ import Counter from '../../components/counter'
 
 test('counter increments and decrements when the buttons are clicked', async () => {
   render(<Counter />)
-  const [decrement, increment] = screen.getAllByRole('button')
+  const [decrement, increment] = [
+    screen.getByRole('button', {name: /decrement/i}),
+    screen.getByRole('button', {name: /increment/i}),
+  ]
   const message = screen.getByText(/Current count/i)
   const user = userEvent.setup()
 
