@@ -19,6 +19,7 @@ const buildLoginForm = build({
 
 const server = setupServer(...handlers)
 beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 test(`logging in displays the user's username`, async () => {
@@ -44,4 +45,21 @@ test(`omitting password resolves in error`, async () => {
   expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
     `"password required"`,
   )
+})
+test('unknown server error displays the error message', async () => {
+  const testErrorMessage = 'Oh no, something bad happened'
+  server.use(
+    rest.post(
+      'https://auth-provider.example.com/api/login',
+      async (req, res, ctx) => {
+        return res(ctx.status(500), ctx.json({message: testErrorMessage}))
+      },
+    ),
+  )
+  render(<Login />)
+  await userEvent.click(screen.getByRole('button', {name: /submit/i}))
+
+  await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
+
+  expect(screen.getByRole('alert')).toHaveTextContent(testErrorMessage)
 })
